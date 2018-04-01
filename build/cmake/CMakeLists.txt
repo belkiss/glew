@@ -83,8 +83,6 @@ endif ()
 
 #### GLEW ####
 
-include_directories (${GLEW_DIR}/include)
-
 set (GLEW_PUBLIC_HEADERS_FILES ${GLEW_DIR}/include/GL/wglew.h ${GLEW_DIR}/include/GL/glew.h ${GLEW_DIR}/include/GL/glxew.h)
 set (GLEW_SRC_FILES ${GLEW_DIR}/src/glew.c)
 
@@ -139,7 +137,9 @@ if(CMAKE_VERSION VERSION_LESS 2.8.12)
 else()
   target_compile_definitions(glew_s INTERFACE "GLEW_STATIC")
   foreach(t glew glew_s)
-    target_include_directories(${t} PUBLIC $<INSTALL_INTERFACE:include>)
+    target_include_directories(${t} PUBLIC
+                               "$<BUILD_INTERFACE:${GLEW_DIR}/include>"
+                               "$<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>")
   endforeach()
   set(MAYBE_EXPORT EXPORT glew-targets)
 endif()

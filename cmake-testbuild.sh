@@ -53,6 +53,14 @@ else
     gusl=-UGLEW_USE_STATIC_LIBS
 fi
 
+# CMAKE_INSTALL_LIBDIR can be lib or lib64
+MACHINE_TYPE=`uname -m`
+if [ ${MACHINE_TYPE} == 'x86_64' ]; then
+    ild=lib64
+else
+    ild=lib
+fi
+
 cmake -Hbuild/cmake -Bout/build/glew -DCMAKE_INSTALL_PREFIX=${PWD}/out -DCMAKE_BUILD_TYPE=Debug $bsl
 cmake --build out/build/glew --target install --config Debug
 cmake out/build/glew -DCMAKE_BUILD_TYPE=Release
@@ -64,8 +72,8 @@ cmake --build out/build/cmake-testbuild --target install --config Debug
 cmake out/build/cmake-testbuild -DCMAKE_BUILD_TYPE=Release
 cmake --build out/build/cmake-testbuild --target install --config Release --clean-first
 
-export LD_LIBRARY_PATH=${PWD}/out/lib:$LD_LIBRARY_PATH
-export DYLD_LIBRARY_PATH=${PWD}/out/lib:$DYLD_LIBRARY_PATH
+export LD_LIBRARY_PATH=${PWD}/out/$ild:$LD_LIBRARY_PATH
+export DYLD_LIBRARY_PATH=${PWD}/out/$ild:$DYLD_LIBRARY_PATH
 
 out/bin/cmake-test_d
 out/bin/cmake-test
